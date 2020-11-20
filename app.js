@@ -61,7 +61,7 @@ const store = {
   quizName: 'Are you smarter than a First grader?'
 };
 
-function titleOFQuiz(){
+function titleOFQuiz() {
   $("header h1").html(store.quizName);
 }
 
@@ -134,7 +134,7 @@ function answerCheck(review) {
   if (result === "Correct") {
     store.right += 1;
     isRight(store.questions[i].correctAnswer);
-    renderQuizApp('rightPage')  
+    renderQuizApp('rightPage')
   } else {
     store.wrong += 1;
     isWrong(store.questions[i].correctAnswer);
@@ -165,9 +165,9 @@ function handleSubmit() {
 }
 //listener that cycles through pages 
 function handleNextQuestion() {
-  $('main').on('click', '#next',  (event) => {
-    if (store.questionNumber > store.questions.length -1) {
-     renderQuizApp('endOfQuiz');
+  $('main').on('click', '#next', (event) => {
+    if (store.questionNumber > store.questions.length - 1) {
+      renderQuizApp('endOfQuiz');
     } else {
       renderQuizApp();
     }
@@ -188,21 +188,21 @@ function handleRestart() {
 function renderQuizApp(pagetype) {
   let html = '';
 
-  switch (pagetype){
+  switch (pagetype) {
     case "startPage":
       html = mainPage();
       break;
-      case "endOfQuiz":
-        html = endPage();
-        break;
-      case "wrongPage":
-        html = isWrong();
-        break;
-      case "rightPage":
-        html = isRight();
-        break;
-        default:
-          html = generateQuestion();  
+    case "endOfQuiz":
+      html = endPage();
+      break;
+    case "wrongPage":
+      html = isWrong();
+      break;
+    case "rightPage":
+      html = isRight();
+      break;
+    default:
+      html = generateQuestion();
   }
 
   $('main').html(html);
