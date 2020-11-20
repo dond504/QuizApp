@@ -12,6 +12,7 @@ body{
 }
 header{
   text-align: center;
+  
 
 }
 main{
@@ -19,6 +20,7 @@ main{
   border: 5px solid grey;
   background-color: whitesmoke;
   padding-bottom: 30px;
+  
   
 }
 .answerSubmit{
@@ -54,6 +56,12 @@ img {
  }
  img{
   max-width:50%;
+ }
+ .middle{
+  display: flex;
+  text-justify: center;
+  margin-left: 48%;
+  padding-bottom: -15px
  }
 
  }

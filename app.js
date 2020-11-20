@@ -57,19 +57,22 @@ const store = {
   quizStarted: false,
   questionNumber: 0,
   right: 0,
-  wrong: 0
+  wrong: 0,
+  quizName: 'Are you smarter than a First grader?'
 };
+
+function titleOFQuiz(){
+  $("header h1").html(store.quizName);
+}
 
 //Main page where you start quiz
 function mainPage() {
-  return `<header 
-    <div class = 'mainpage'>
-    <h1>Are you smarter than a First grader?</h1>
+  return `<div id = 'startPage'>
       <h2>Pop quiz are you ready?</h2>
       <button id = "startQuiz" class = "startbutton" autofocus>Start Quiz</button>
-     </div>
-   </header>
-   <img src = "https://media.giphy.com/media/3oEdv4CFfKoLoD59bG/giphy.gif" alt = Million Dollar Question"/>`
+    
+   </div>
+   <img src = "https://media.giphy.com/media/3oEdv4CFfKoLoD59bG/giphy.gif" alt = "Million Dollar Question"/>`
 }
 //this fuction generates the quiz
 function generateQuestion() {
@@ -84,18 +87,19 @@ function generateQuestion() {
     <label for="answer${index}">${answer}</label></div><br>`
     }
   });
-  return `<div class='questionPage'>  
+  return `<div id ='questionPage'>  
    <form id = "quiz-form">
    <h2>Question ${number + 1}: ${question.question}</h2>  
   ${answers.join("")}
   <button type= "click" class ="answerSubmit">Submit Answer</button>
   <p>Right: ${store.right}</p><p>Wrong: ${store.wrong}</p>
   </form>
-</div>`
+  </div>
+<img src = "https://media.giphy.com/media/lKXEBR8m1jWso/giphy.gif" alt = "Sponge Bob and Patrick thinking"/>`
 }
 //make a page for right answers
-function isRight(answers) {
-  return `<div class="correctPage">
+function isRight() {
+  return `<div id = "correctPage">
   <h2>Woo Hoo! You got it right!</h2>
   <p>Right: ${store.right}</p><p>Wrong: ${store.wrong}</p>
   <button id ="next" class="nextQuestion">Next Question</button>
@@ -103,8 +107,8 @@ function isRight(answers) {
 <img src = "https://media.giphy.com/media/lMameLIF8voLu8HxWV/giphy.gif" alt="People throwing confetti"/>`
 }
 // make a page for wrong answers
-function isWrong(answers) {
-  return `<div class="wrongPage">
+function isWrong() {
+  return `<div id = "wrongPage">
   <h2>Oh no! You are not smarter than a First grader!</h2>
   <p>Right: ${store.right}</p><p>Wrong: ${store.wrong}</p>
   <button id ="next" class="nextQuestion">Next Question</button>
@@ -113,7 +117,7 @@ function isWrong(answers) {
 }
 //last page restart quiz
 function endPage() {
-  return `<div class="endOfQuiz">
+  return `<div id ="endOfQuiz">
   <h2>You are smarter than a First grader!</h2>
   <h3>Right: ${store.right}</h3>
   <h3>Wrong: ${store.wrong}</h3>
@@ -130,15 +134,16 @@ function answerCheck(review) {
   if (result === "Correct") {
     store.right += 1;
     isRight(store.questions[i].correctAnswer);
-    html = isRight()
+    renderQuizApp('rightPage')  
   } else {
     store.wrong += 1;
     isWrong(store.questions[i].correctAnswer);
-    html = isWrong()
+    renderQuizApp('wrongPage');
   }
+
   store.questionNumber++
   $('main').html(html)
-  handleNextQuestion();
+  //handleNextQuestion();
 }
 //listener that starts quiz
 function handleStartQuiz() {
@@ -160,13 +165,11 @@ function handleSubmit() {
 }
 //listener that cycles through pages 
 function handleNextQuestion() {
-  $('#next').on('click', (event) => {
-    if (store.questionNumber < 5) {
-      html = renderQuizApp();
-      main();
+  $('main').on('click', '#next',  (event) => {
+    if (store.questionNumber > store.questions.length -1) {
+     renderQuizApp('endOfQuiz');
     } else {
-      html = endPage();
-      $('main').html(html);
+      renderQuizApp();
     }
   });
 }
@@ -176,18 +179,32 @@ function handleRestart() {
     event.preventDefault();
     store.quizStarted = false;
     store.questionNumber = 0;
-    renderQuizApp();
+    store.right = 0;
+    store.wrong = 0
+    renderQuizApp('startPage');
   });
 }
 //this function renders pages
-function renderQuizApp() {
+function renderQuizApp(pagetype) {
   let html = '';
-  if (store.quizStarted) {
-    html = generateQuestion()
-    if (store.questionNumber > store.questions.length - 1) {}
-  } else {
-    html = mainPage()
+
+  switch (pagetype){
+    case "startPage":
+      html = mainPage();
+      break;
+      case "endOfQuiz":
+        html = endPage();
+        break;
+      case "wrongPage":
+        html = isWrong();
+        break;
+      case "rightPage":
+        html = isRight();
+        break;
+        default:
+          html = generateQuestion();  
   }
+
   $('main').html(html);
 }
 
@@ -195,7 +212,8 @@ function renderQuizApp() {
 
 
 function main() {
-  renderQuizApp()
+  titleOFQuiz()
+  renderQuizApp('startPage')
   handleStartQuiz()
   handleSubmit()
   handleNextQuestion()
